@@ -27,7 +27,6 @@ public class ParallelSieve extends Sieve {
 		}
 		for(int i = 2; i*i < end; ++i){
 			if(prime.get(i)){
-				System.out.println(i);
 				initialPrimes.add(i);
 			}
 		}
@@ -68,10 +67,8 @@ public class ParallelSieve extends Sieve {
 		prime.set(0, maxLength);  
 		for (Integer p: initialPrimes)
 		{
-			//System.out.println(p);
 			int firstMult = (start / p) * p;
 			for (int j = firstMult >= start ? firstMult : firstMult + p ; j < end; j += p){				
-				//System.out.println(j + " " + start + " " + p + " " + (j - start));
 				prime.clear(j - start);
 			}
 		}

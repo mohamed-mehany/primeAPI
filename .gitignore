@@ -3,7 +3,7 @@
 *.log
 tmp
 dump
-
+*.swp
 # Eclipse
 .settings
 .cache
