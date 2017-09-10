@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import models.EratoSieve;
 import models.MillerRabinSieve;
+import models.ParallelMillerRabinSieve;
 import models.ParallelSieve;
 import models.Sieve;
 import org.junit.Test;
@@ -43,6 +44,13 @@ public class SieveModelTest extends WithApplication {
 	@Test
 	public void testParallelSieve() {
 		s = new ParallelSieve(startTest, endTest);	
+		ArrayList<Integer> output = s.generate();
+		assertEquals(primes, output);
+	}
+
+	@Test
+	public void testParallelMillerRabinSieve() {
+		s = new ParallelMillerRabinSieve(startTest, endTest);	
 		ArrayList<Integer> output = s.generate();
 		assertEquals(primes, output);
 	}

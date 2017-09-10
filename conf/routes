@@ -4,3 +4,4 @@
 
 # An example controller showing a sample home page
 GET 	/sieve						controllers.SieveController.generate(type: String, start: Int, end: Int)
+GET     / 							controllers.SieveController.getQueries()

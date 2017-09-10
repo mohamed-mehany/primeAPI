@@ -13,7 +13,7 @@ public class MillerRabinSieve extends Sieve {
 		ArrayList<Integer> primes = new ArrayList<Integer>();
 		int start = this.getStart(), end = this.getEnd();
 		for(int i = start; i <= end; ++i){
-			if(isProbablePrime(i, 50)){
+			if(isProbablePrime(i, 20)){
 				primes.add(i);
 			}
 		}

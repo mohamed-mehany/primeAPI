@@ -1,44 +1,24 @@
 package models;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 import models.Sieve;
 
-public class ParallelSieve extends Sieve {
-	private BitSet prime;
-	ArrayList<Integer> initialPrimes;
-	public ParallelSieve(int start, int end){
+public class ParallelMillerRabinSieve extends Sieve {
+
+	public ParallelMillerRabinSieve(int start, int end){
 		super(start, end);
-		prime = new BitSet(end + 1);
-		prime.flip(2, end + 1);
-		initialPrimes = new ArrayList<Integer>();
-		for (long i = 2; i * i * i * i <= end; i++) {
-			if (prime.get((int)i)) {
-				for (long j = i * i; j <= end; j += i) {
-					prime.clear((int)j);
-				}
-			} 
-		}
-		for(int i = 2; i*i < end; ++i){
-			if(prime.get(i)){
-				initialPrimes.add(i);
-			}
-		}
 	}
 	public ArrayList<Integer> generate(){
+		ArrayList<Integer> primes = new ArrayList<Integer>();
 		int nThreads = Runtime.getRuntime().availableProcessors();
 		int start = this.getStart(), end = this.getEnd() + 1, rangeLength = (int) Math.ceil((end - start) / nThreads);
-		ArrayList<Integer> primes = new ArrayList<Integer>();
-		primes.addAll(initialPrimes.stream()
-                .filter(p -> p >= start)
-                .collect(Collectors.toList()));
 		final ArrayList<Callable<ArrayList<Integer>>> ranges = new ArrayList<Callable<ArrayList<Integer>>>();
 		final ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
 		for(int i = start; i <= end; i += rangeLength){
@@ -62,26 +42,62 @@ public class ParallelSieve extends Sieve {
 		Collections.sort(primes);
 		return primes;
 	}
-
-	private ArrayList<Integer> primesRange(int start, int end){
+	public ArrayList<Integer> primesRange(int start, int end){
 		ArrayList<Integer> primes = new ArrayList<Integer>();
-		int maxLength = end - start + 1;
-		BitSet prime = new BitSet(maxLength);
-		prime.set(0, maxLength);  
-		for (Integer p: initialPrimes)
-		{
-			int firstMult = (start / p) * p;
-			for (int j = firstMult >= start ? firstMult : firstMult + p ; j < end; j += p){				
-				prime.clear(j - start);
-			}
-		}
-		for (int i = start; i < end; i++){
-			if (prime.get(i - start)){
-				if(i != 1){
-					primes.add(i);	
-				}
+		for(int i = start; i < end; ++i){
+			if(isProbablePrime(i, 20)){
+				primes.add(i);
 			}
 		}
 		return primes;
 	}
+	public boolean isProbablePrime(int n, int precision) {
+		if (n == 2 || n == 3){
+			return true;
+		}
+		if (n % 2 == 0 || n < 2){
+			return false;
+		}
+		// Write (n - 1) as 2^s * d
+		long d = n - 1;
+		while (d % 2 == 0) {
+			d /= 2;
+		}
+		Random r = new Random();
+		while(precision-- > 0){
+			long a = Math.abs(r.nextLong()) % (n - 1) + 1, temp = d;
+			long mod = modPow(a, n, temp);
+			while(temp != n - 1 && mod != 1 && mod != n - 1){
+				mod = mulMod(mod, mod, n);
+				temp *= 2;
+			}
+			if(mod != n - 1 && temp % 2 == 0){
+				return false;
+			}
+		}
+		return true;
+	}
+	public long modPow(long a, long mod, long n) {
+		long solution = 1;
+		while(n > 0){
+			if(n % 2 == 1){
+				solution = (solution * a) % mod;
+			}
+			n = n >> 1;
+			a = (a * a) % mod;
+		}
+		return solution;
+	}
+	public long mulMod(long a, long b, long mod){
+		long x = 0, y = a % mod;
+		while(b > 0){
+			if(b % 2 == 1){
+				x = (x + y) % mod;
+			}
+			y = (y * 2) % mod;
+			b /= 2;
+		}
+		return x % mod;
+	}
+
 }
