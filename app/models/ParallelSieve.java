@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import models.Sieve;
-
+// Segmented multi threaded sieve
 public class ParallelSieve extends Sieve {
 	private BitSet prime;
 	ArrayList<Integer> initialPrimes;
@@ -19,7 +19,7 @@ public class ParallelSieve extends Sieve {
 		prime = new BitSet(end + 1);
 		prime.flip(2, end + 1);
 		initialPrimes = new ArrayList<Integer>();
-		for (long i = 2; i * i * i * i <= end; i++) {
+		for (long i = 2; i * i * i * i <= end; i++) { // To cross composites <= end, we need all primes <= sqrt(n)
 			if (prime.get((int)i)) {
 				for (long j = i * i; j <= end; j += i) {
 					prime.clear((int)j);
@@ -33,8 +33,13 @@ public class ParallelSieve extends Sieve {
 		}
 	}
 	public ArrayList<Integer> generate(){
+		// Assume number of threads to be number of avaialble cores
 		int nThreads = Runtime.getRuntime().availableProcessors();
+		// Divide whole range to smaller ranges based on available threads
 		int start = this.getStart(), end = this.getEnd() + 1, rangeLength = (int) Math.ceil((end - start) / nThreads);
+		if(rangeLength == 0) {  // Only happens when whole range is less than numbers of threads
+			rangeLength++;
+		}
 		ArrayList<Integer> primes = new ArrayList<Integer>();
 		primes.addAll(initialPrimes.stream()
                 .filter(p -> p >= start)

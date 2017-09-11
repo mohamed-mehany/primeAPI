@@ -2,6 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
+# Return all primes between start and end using specific sieve type
 GET 	/sieve						controllers.SieveController.generate(type: String, start: Int, end: Int)
-GET     / 							controllers.SieveController.getQueries()
+# Return all queries done and their results
+GET     /queries 							controllers.SieveController.getQueries()

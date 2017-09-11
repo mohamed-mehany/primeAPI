@@ -19,6 +19,7 @@ public class MillerRabinSieve extends Sieve {
 		}
 		return primes;
 	}
+	// Primality test with error probability less than 4 ^ (-precision)
 	public boolean isProbablePrime(int n, int precision) {
 		if (n == 2 || n == 3){
 			return true;
@@ -26,7 +27,7 @@ public class MillerRabinSieve extends Sieve {
 		if (n % 2 == 0 || n < 2){
 			return false;
 		}
-		// Write (n - 1) as 2^s * d
+		// Find d, such that (n - 1) =  2^x * d
 		long d = n - 1;
 		while (d % 2 == 0) {
 			d /= 2;
@@ -45,6 +46,7 @@ public class MillerRabinSieve extends Sieve {
 		}
 		return true;
 	}
+	// Computes (a ^ n ) mod mod in logarithmic time
 	public long modPow(long a, long mod, long n) {
 		long solution = 1;
 		while(n > 0){
@@ -56,6 +58,7 @@ public class MillerRabinSieve extends Sieve {
 		}
 		return solution;
 	}
+	// Computes (a * b) mod mod, even if a * b overflows long
 	public long mulMod(long a, long b, long mod){
 		long x = 0, y = a % mod;
 		while(b > 0){
