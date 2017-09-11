@@ -25,8 +25,8 @@ public class SieveControllerTest extends WithApplication {
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(GET)
                 .uri("/sieve?type=erato&start="+start+"&end="+end);
-
         Result result = route(app, request);
+		System.out.println(result.status() + " " );
         assertEquals(OK, result.status());
 
 	}

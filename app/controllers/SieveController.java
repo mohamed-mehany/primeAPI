@@ -34,7 +34,7 @@ public class SieveController extends Controller {
 			json.put("message", "Start can't be greater than end");
 			return badRequest(json);
 		}
-		if(type.matches("erato|miller|parallel|parallelMiller")){
+		if(!type.matches("erato|miller|parallel|parallelMiller")){
 			json.put("message", "Please select one of the available sieve types: (erato|miller|parallel|parallelMiller)");
 			return badRequest(json);
 		}
