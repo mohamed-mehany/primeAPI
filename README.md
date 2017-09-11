@@ -3,7 +3,10 @@
 ## Usage
 
 ### CLI
-Download jar at ``` bin/primeAPI-cli.jar ```
+Download jar at 
+``` bin/primeAPI-cli.jar```
+
+
 Then run the following command:
 ``` 
 java -jar primeAPI-cli.jar -s 1 -e 100 -t erato 
