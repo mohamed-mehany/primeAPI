@@ -19,14 +19,22 @@ import services.SieveService;
 
 /**
  * This controller contains an action to handle HTTP requests
- * to the SieveController and connects to the sieve model.
+ * to the SieveController and connects to the sieve service.
+ *  
  */
 public class SieveController extends Controller {
 	/**
 	 * * An action that given the range start, range end and the type of the 
-	 * sieve("erato", "parallel", "miller", "parallelMiller"), returns all primes in that range,
+	 * sieve, returns all primes in that range,
 	 * their count and elapsed time in milliseconds and saves the query
 	 * and its result using the SieveQuery model
+	 * @param type Sieve type ("erato", "parallel", "miller", "parallelMiller")
+	 * @param start Range start to find primes 
+	 * @param end Range end to find primes
+	 * @return jsonResult JSON 
+	 * @return jsonResult.count int number of primes between start and end
+	 * @return jsonResult.elapsedTime long Algorithm run time in milliseconds
+	 * @return jsonResult.primes int[] Array of primes between start and end
 	*/
 	public Result generate(String type, int start, int end){
 		ObjectNode json = Json.newObject();
@@ -56,6 +64,14 @@ public class SieveController extends Controller {
 
 	/**
 	 * An action that returns a list of all queries stored.
+	 * @return jsonResult JSON 
+	 * @return jsonResult.results SieveQuery[]
+	 * @return jsonResult.results.primesCount int Number of primes between start and end
+	 * @return jsonResult.results.start int Start of range in query
+	 * @return jsonResult.results.end int End of range in query
+	 * @return jsonResult.results.elapsedTime long Algorithm run time in milliseconds for query
+	 * @return jsonResult.results.createdAt long Unix timestamp of creation date of query 
+	 * @return jsonResult.results.sieveType String Sieve type ("erato", "parallel", "miller", "parallelMiller")
 	 */
 	public Result getQueries(){
 		List<SieveQuery> results = SieveQuery.find.all();
